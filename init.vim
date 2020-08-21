@@ -30,6 +30,7 @@ set encoding=utf-8
 set splitbelow
 set splitright
 set mouse=a
+set autoread
 
 let mapleader = ' '
 
@@ -209,6 +210,7 @@ if has("autocmd")
   autocmd BufRead,BufNewFile gitconfig set ft=.gitconfig
   autocmd BufWritePre *.js,*.ts,*.json,*.graphql,*.html PrettierAsync
 	autocmd FileType defx call s:defx_my_settings()
+  autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 endif
 
 if (empty($TMUX))
