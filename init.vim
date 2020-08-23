@@ -80,10 +80,6 @@ let g:airline#extensions#tabline#enabled = 1
 
 let g:floaterm_autoclose = 1
 
-" let g:prettier#autoformat = 1
-let g:prettier#autoformat_require_pragma = 0
-let g:prettier#exec_cmd_async = 1
-
 let g:neovide_cursor_vfx_mode = "railgun"
 
 let php_htmlInStrings = 1
@@ -208,8 +204,9 @@ if has("autocmd")
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile .eslintrc,.jscsrc,.jshintrc,.babelrc set ft=json
   autocmd BufRead,BufNewFile gitconfig set ft=.gitconfig
-  autocmd BufWritePre *.js,*.ts,*.json,*.graphql,*.html PrettierAsync
 	autocmd FileType defx call s:defx_my_settings()
+  autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+  autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
   autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 endif
 
