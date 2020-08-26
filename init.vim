@@ -14,6 +14,7 @@ set updatetime=300
 set shortmess+=c
 set signcolumn=yes
 set termguicolors
+set scrolloff=5
 set hidden
 syntax on
 set t_Co=256
@@ -23,7 +24,7 @@ set background=dark
 "colorscheme monokai_pro
 colorscheme onedark
 "colorscheme seoul256
-set number relativenumber
+set number
 set ignorecase
 set smartcase
 set encoding=utf-8
@@ -69,6 +70,7 @@ nnoremap <leader>/ :Commentary<CR>
 vnoremap <leader>/ :Commentary<CR>
 nnoremap <silent> <leader> :silent WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :silent <c-u> :silent WhichKeyVisual '<Space>'<CR>
+nnoremap <leader><leader> :call <SID>show_documentation()<CR>
 
 "Select lines after indent
 vmap > >gv
@@ -161,7 +163,7 @@ let g:which_key_map['p'] = [ ':PlugInstall'  , 'install plugins' ]
 let g:which_key_map['u'] = [ ':UndotreeShow'  , 'undotree' ]
 let g:which_key_map['t'] = [ ':terminal'  , 'terminal' ]
 let g:which_key_map['T'] = [ ':FloatermToggle'  , 'floaterm' ]
-" let g:which_key_map['n'] = [ ':NERDTreeToggle'  , 'files sidebar' ]
+let g:which_key_map['n'] = [ ':call DefxTree()'  , 'files sidebar' ]
 " let g:which_key_map['N'] = [ ':NERDTreeFind'  , 'find current file' ]
 let g:which_key_map['b'] = [ ':Buffers'  , 'list buffers' ]
 let g:which_key_map['f'] = [ ':Files'  , 'find files' ]
@@ -182,7 +184,6 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-nnoremap <silent>  :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -192,15 +193,7 @@ function! s:show_documentation()
   endif
 endfunction
 
-function! ShowDocIfNoDiagnostic(timer_id)
-  if (coc#util#has_float() == 0)
-    silent call CocActionAsync('doHover')
-  endif
-endfunction
-
-function! s:show_hover_doc()
-  call timer_start(500, 'ShowDocIfNoDiagnostic')
-endfunction
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 if has("autocmd")
   filetype plugin indent on
@@ -217,8 +210,6 @@ if has("autocmd")
 	autocmd FileType defx call s:defx_my_settings()
   autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
   autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
-  autocmd CursorHoldI * :call <SID>show_hover_doc()
-  autocmd CursorHold * :call <SID>show_hover_doc()
   autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 endif
 
